@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'SpotifyHelper_Example' do
+  pod 'SpotifyHelper', :path => '../'
+
+  target 'SpotifyHelper_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
