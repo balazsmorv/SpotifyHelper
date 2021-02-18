@@ -1,0 +1,44 @@
+{
+  "name": "SpotifyHelper",
+  "version": "0.1.0",
+  "summary": "The spotify sdk, with helper classes",
+  "description": "The spotify sdk, with helper classes.",
+  "homepage": "https://github.com/balazsmorv/SpotifyHelper",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "balazsmorv": "balazsmorvay@yahoo.com"
+  },
+  "source": {
+    "git": "https://github.com/balazsmorv/SpotifyHelper.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "swift_versions": [
+    "5.0",
+    "5.1",
+    "5.2"
+  ],
+  "static_framework": true,
+  "source_files": "SpotifyHelper/Classes/**/*",
+  "preserve_paths": "ios-sdk/SpotifyiOS.framework",
+  "vendored_frameworks": "ios-sdk/SpotifyiOS.framework",
+  "prepare_command": "./prepare-iOS-SDK.sh",
+  "frameworks": "UIKit",
+  "dependencies": {
+    "RxSwift": [
+      "~> 6.1.0"
+    ],
+    "RxRelay": [
+      "~> 6.1.0"
+    ],
+    "RxCocoa": [
+      "~> 6.1.0"
+    ]
+  },
+  "swift_version": "5.2"
+}

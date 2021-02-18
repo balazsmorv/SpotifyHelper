@@ -1,8 +1,18 @@
+source 'https://github.com/balazsmorv/SpotifySDKPodSpec.git'
+source 'https://github.com/CocoaPods/Specs.git'
+
+
 use_frameworks!
 
 platform :ios, '9.0'
 
 target 'SpotifyHelper_Example' do
+  
+  pod 'RxSwift', '~> 6.1.0'
+  pod 'RxRelay', '~> 6.1.0'
+  pod 'RxCocoa', '~> 6.1.0'
+  #pod 'SpotifySDK', :git => 'https://github.com/balazsmorv/SpotifySDK.git', :tag => '1.2.2'
+  
   pod 'SpotifyHelper', :path => '../'
 
   target 'SpotifyHelper_Tests' do

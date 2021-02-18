@@ -1,0 +1,6 @@
+framework module SpotifyHelper {
+  umbrella header "SpotifyHelper-umbrella.h"
+
+  export *
+  module * { export * }
+}

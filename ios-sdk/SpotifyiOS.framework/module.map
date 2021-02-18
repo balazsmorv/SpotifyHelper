@@ -1,0 +1,4 @@
+module SpotifyiOS {
+header "Headers/SpotifyiOS.h"
+export *
+}
