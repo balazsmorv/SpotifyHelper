@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SpotifyHelper'
-  s.version          = '0.1.2'
+  s.version          = '0.1.3'
   s.summary          = 'The spotify sdk, with helper classes'
 
 # This description is used to generate tags and improve search results.
@@ -50,12 +50,11 @@ Pod::Spec.new do |s|
   
   
   s.frameworks = 'UIKit'
-  s.dependency 'RxSwift', '~> 6.1.0'
-  s.dependency 'RxRelay', '~> 6.1.0'
-  s.dependency 'RxCocoa', '~> 6.1.0'
+  s.dependency 'RxSwift', '~> 5.0'
+  s.dependency 'RxRelay', '~> 5.0'
+  s.dependency 'RxCocoa', '~> 5.0'
 
 
-  #s.dependency 'SpotifySDK', '~> 1.2.2'
 
 
   s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }

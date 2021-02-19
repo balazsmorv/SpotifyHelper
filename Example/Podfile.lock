@@ -1,19 +1,19 @@
 PODS:
-  - RxCocoa (6.1.0):
-    - RxRelay (= 6.1.0)
-    - RxSwift (= 6.1.0)
-  - RxRelay (6.1.0):
-    - RxSwift (= 6.1.0)
-  - RxSwift (6.1.0)
-  - SpotifyHelper (0.1.1):
-    - RxCocoa (~> 6.1.0)
-    - RxRelay (~> 6.1.0)
-    - RxSwift (~> 6.1.0)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
+  - SpotifyHelper (0.1.2):
+    - RxCocoa (~> 5.0)
+    - RxRelay (~> 5.0)
+    - RxSwift (~> 5.0)
 
 DEPENDENCIES:
-  - RxCocoa (~> 6.1.0)
-  - RxRelay (~> 6.1.0)
-  - RxSwift (~> 6.1.0)
+  - RxCocoa (~> 5.0)
+  - RxRelay (~> 5.0)
+  - RxSwift (~> 5.0)
   - SpotifyHelper (from `../`)
 
 SPEC REPOS:
@@ -27,11 +27,11 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  RxCocoa: 5c51f02d562cbd94629f6c26cf0c80fe4ab8d343
-  RxRelay: 483e1a19fad961b41f0b0c0bee506f46c1ae14fe
-  RxSwift: a834e5c538e89eca0cae86f403f4fbf0336786ce
-  SpotifyHelper: 77b0625c2fb1068852e822684c20ce198901db5c
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SpotifyHelper: 60f986bf26038faa8dbc77b99ab1557125148498
 
-PODFILE CHECKSUM: decb55c5e3cfc0ce13b4e59b159a696f4a75b368
+PODFILE CHECKSUM: a7bc9953fcfc303d134aef159a98ca02e029d3f8
 
 COCOAPODS: 1.10.1

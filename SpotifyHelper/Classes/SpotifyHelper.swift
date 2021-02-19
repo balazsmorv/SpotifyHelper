@@ -286,7 +286,7 @@ class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDele
 
             strongSelf.appRemote.imageAPI?.fetchImage(forItem: track, with: strongSelf.albumImageSize, callback: { image, error in
                 if let error = error {
-                    single(.failure(error))
+                    single(.error(error))
                 }
 
                 if let image = image as? UIImage {
