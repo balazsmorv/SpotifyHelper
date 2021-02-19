@@ -12,6 +12,16 @@ target 'SpotifyHelper_Example' do
   pod 'RxRelay', '~> 6.1.0'
   pod 'RxCocoa', '~> 6.1.0'
   #pod 'SpotifySDK', :git => 'https://github.com/balazsmorv/SpotifySDK.git', :tag => '1.2.2'
+
+
+
+
+post_install do |installer|
+  installer.pods_project.build_configurations.each do |config|
+    config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+  end
+end
+
   
   pod 'SpotifyHelper', :path => '../'
 
@@ -20,4 +30,8 @@ target 'SpotifyHelper_Example' do
 
     
   end
+
+
+
+
 end

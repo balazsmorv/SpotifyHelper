@@ -1,6 +1,6 @@
 {
   "name": "SpotifyHelper",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "summary": "The spotify sdk, with helper classes",
   "description": "The spotify sdk, with helper classes.",
   "homepage": "https://github.com/balazsmorv/SpotifyHelper",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/balazsmorv/SpotifyHelper.git",
-    "tag": "0.1.0"
+    "tag": "0.1.1"
   },
   "platforms": {
     "ios": "9.0"
@@ -39,6 +39,12 @@
     "RxCocoa": [
       "~> 6.1.0"
     ]
+  },
+  "pod_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
+  },
+  "user_target_xcconfig": {
+    "EXCLUDED_ARCHS[sdk=iphonesimulator*]": "arm64"
   },
   "swift_version": "5.2"
 }

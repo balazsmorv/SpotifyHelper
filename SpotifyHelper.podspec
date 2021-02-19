@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SpotifyHelper'
-  s.version          = '0.1.1'
+  s.version          = '0.1.2'
   s.summary          = 'The spotify sdk, with helper classes'
 
 # This description is used to generate tags and improve search results.
@@ -42,6 +42,8 @@ Pod::Spec.new do |s|
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
 
+  #s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'VALID_ARCHS[sdk=iphonesimulator*]' => 'x86_64' }
+
   s.preserve_paths = 'ios-sdk/SpotifyiOS.framework'
   s.vendored_frameworks = 'ios-sdk/SpotifyiOS.framework'
   s.prepare_command = './prepare-iOS-SDK.sh'
@@ -56,6 +58,16 @@ Pod::Spec.new do |s|
   #s.dependency 'SpotifySDK', '~> 1.2.2'
 
 
+  s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+  s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+
+
 
   
 end
+
+
+
+
+
+
