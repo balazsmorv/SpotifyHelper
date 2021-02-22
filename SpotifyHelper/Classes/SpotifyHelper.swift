@@ -262,13 +262,11 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     public func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
         print("SPOTIFY: disconnected")
         playerStateObservable.accept(nil)
-        sendToErrorOutput(title: "Spotify disconnected", description: error?.localizedDescription ?? "")
     }
 
     public func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
         print("SPOTIFY: failed")
         playerStateObservable.accept(nil)
-        sendToErrorOutput(title: "Spotify failed to connect", description: error?.localizedDescription ?? "")
     }
 
     public func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
