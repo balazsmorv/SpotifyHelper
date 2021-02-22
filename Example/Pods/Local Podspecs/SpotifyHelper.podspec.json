@@ -1,6 +1,6 @@
 {
   "name": "SpotifyHelper",
-  "version": "0.1.2",
+  "version": "0.1.7",
   "summary": "The spotify sdk, with helper classes",
   "description": "The spotify sdk, with helper classes.",
   "homepage": "https://github.com/balazsmorv/SpotifyHelper",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/balazsmorv/SpotifyHelper.git",
-    "tag": "0.1.2"
+    "tag": "0.1.7"
   },
   "platforms": {
     "ios": "9.0"
@@ -38,6 +38,9 @@
     ],
     "RxCocoa": [
       "~> 5.0"
+    ],
+    "RxGesture": [
+      "~> 3.0"
     ]
   },
   "pod_target_xcconfig": {

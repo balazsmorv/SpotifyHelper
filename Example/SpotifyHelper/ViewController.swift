@@ -1,24 +1,33 @@
 //
 //  ViewController.swift
-//  SpotifyHelper
+//  SpotifyHelper_Example
 //
-//  Created by balazsmorv on 02/18/2021.
-//  Copyright (c) 2021 balazsmorv. All rights reserved.
+//  Created by Balázs Morvay on 2021. 02. 22..
+//  Copyright © 2021. CocoaPods. All rights reserved.
 //
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UINavigationController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
+        
+        let myVC = SpotifyViewController(nibName: "SpotifyViewController", bundle: nil)
+        self.pushViewController(myVC, animated: true)
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        // Do any additional setup after loading the view.
     }
+    
+
+    /*
+    // MARK: - Navigation
+
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destination.
+        // Pass the selected object to the new view controller.
+    }
+    */
 
 }
-

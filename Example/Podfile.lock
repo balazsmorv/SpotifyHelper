@@ -2,16 +2,21 @@ PODS:
   - RxCocoa (5.1.1):
     - RxRelay (~> 5)
     - RxSwift (~> 5)
+  - RxGesture (3.0.2):
+    - RxCocoa (~> 5.1)
+    - RxSwift (~> 5.1)
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
   - RxSwift (5.1.1)
-  - SpotifyHelper (0.1.2):
+  - SpotifyHelper (0.1.7):
     - RxCocoa (~> 5.0)
+    - RxGesture (~> 3.0)
     - RxRelay (~> 5.0)
     - RxSwift (~> 5.0)
 
 DEPENDENCIES:
   - RxCocoa (~> 5.0)
+  - RxGesture (~> 3.0)
   - RxRelay (~> 5.0)
   - RxSwift (~> 5.0)
   - SpotifyHelper (from `../`)
@@ -19,6 +24,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - RxCocoa
+    - RxGesture
     - RxRelay
     - RxSwift
 
@@ -28,10 +34,11 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxGesture: d6bd7447ca3a596c7a9702a6a2b6a2bb5d8bae54
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
-  SpotifyHelper: 60f986bf26038faa8dbc77b99ab1557125148498
+  SpotifyHelper: 0a9d42c021439c82c1a2d2351ed9858b7a9e57fc
 
-PODFILE CHECKSUM: a7bc9953fcfc303d134aef159a98ca02e029d3f8
+PODFILE CHECKSUM: ebb51cb1737bc8d9b0eccd4c153b74cb7a20f902
 
 COCOAPODS: 1.10.1

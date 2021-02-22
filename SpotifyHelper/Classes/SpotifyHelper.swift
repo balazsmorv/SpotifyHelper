@@ -234,6 +234,7 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
         } else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
             sendToErrorOutput(title: "Deep link error", description: error_description)
         }
+        appRemote.connect()
         return true
     }
 
@@ -244,7 +245,15 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     }
 
     public func connectRemote() {
-        appRemote.connect()
+        SPTAppRemote.checkIfSpotifyAppIsActive { (active) in
+            // if it is active, connect to it
+            if active {
+                self.appRemote.connect()
+            } else {
+                // Initiate the authorization. In receiveDeepLink(), the connection will be made
+                self.appRemote.authorizeAndPlayURI(self.playURI)
+            }
+        }
     }
 
     // MARK: - App remote delegate funcs
@@ -271,11 +280,6 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
 
     public func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
         playerStateObservable.accept(playerState)
-    }
-
-    /// Initiate authorization and connect to Spotify.
-    private func connect() {
-        appRemote.authorizeAndPlayURI(playURI)
     }
 
     // MARK: - Other functions

@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SpotifyHelper'
-  s.version          = '0.1.7'
+  s.version          = '0.1.8'
   s.summary          = 'The spotify sdk, with helper classes'
 
 # This description is used to generate tags and improve search results.
@@ -53,6 +53,7 @@ Pod::Spec.new do |s|
   s.dependency 'RxSwift', '~> 5.0'
   s.dependency 'RxRelay', '~> 5.0'
   s.dependency 'RxCocoa', '~> 5.0'
+  s.dependency 'RxGesture', '~> 3.0'
 
 
 
