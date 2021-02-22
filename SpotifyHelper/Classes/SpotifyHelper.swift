@@ -125,10 +125,11 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
         super.init()
         
         playerStateObservable
+            .debug("Spotify image", trimOutput: false)
             .compactMap { $0?.track }
             .flatMapLatest { (track) in
                 self.fetchAlbumArtForTrack(track)
-            }.timeout(.seconds(3), scheduler: MainScheduler.instance)
+            }
             .catchErrorJustReturn(nil)
             .bind(to: albumImageObservable)
             .disposed(by: disposeBag)
