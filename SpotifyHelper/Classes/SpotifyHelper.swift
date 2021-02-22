@@ -11,7 +11,6 @@ import RxRelay
 import RxSwift
 import SpotifyiOS
 
-
 public protocol SpotifyHelperProtocol {
     // MARK: - Input - App lifecycle
 
@@ -45,14 +44,14 @@ public protocol SpotifyHelperProtocol {
     var errorOutput: PublishRelay<SpotifyError> { get }
     var imagePublisher: PublishSubject<UIImage?> { get }
     var spotifyStateOutput: SpotifyStateOutput { get }
+    var spotifyItunesID: NSNumber { get }
 }
 
 class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate, SpotifyHelperProtocol {
     // MARK: - Properties
 
-    // TODO: change these, when releasing!
-    private let SpotifyClientID = "4f7e8f1175514131b4b2c899c0edb232"
-    private let SpotifyRedirectURL = URL(string: "spotify-ios-quick-start://spotify-login-callback")!
+    private let SpotifyClientID: String
+    private let SpotifyRedirectURL: URL
 
     private var accessToken: String?
 
@@ -76,7 +75,13 @@ class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDele
 
     public var albumImageSize: CGSize = CGSize(width: 256, height: 256)
 
-    override public init() {
+    /// The identifier that points to the Spotify app in the App Store. To show the Spotify page, call: SKStoreProductViewController.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: spotifyItunesID])
+    public let spotifyItunesID = SPTAppRemote.spotifyItunesItemIdentifier()
+
+    public init(spotifyClientID: String, redirectURL: URL) {
+        SpotifyClientID = spotifyClientID
+        SpotifyRedirectURL = redirectURL
+
         spotifyStateOutput =
             SpotifyStateOutput(
                 trackObservable: playerStateObservable.map({ (remotePlayerState) -> SpotifyTrack? in
@@ -217,7 +222,7 @@ class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDele
             appRemote.connectionParameters.accessToken = access_token
             accessToken = access_token
         } else if let error_description = parameters?[SPTAppRemoteErrorDescriptionKey] {
-            self.sendToErrorOutput(title: "Deep link error", description: error_description)
+            sendToErrorOutput(title: "Deep link error", description: error_description)
         }
         return true
     }
@@ -303,7 +308,7 @@ class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDele
     }
 }
 
-/// Composite class that contains the spotify player's state
+/// Class that contains the spotify player's state
 public class SpotifyStateOutput {
     public let trackObservable: Observable<SpotifyTrack?>
     public let playbackPositionObservable: Observable<Int?>

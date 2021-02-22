@@ -7,13 +7,12 @@
 //
 
 import Foundation
-import RxSwift
 import RxRelay
+import RxSwift
 import SpotifyiOS
 
-
+/// Converter class for converting SpotifySDK classes into classes that do not need the SDK
 public class SpotifyConverter {
-    
     public static func convertTrack(_ track: SPTAppRemoteTrack) -> SpotifyTrack {
         SpotifyTrack(album: convertAlbum(track.album),
                      artist: convertArtist(track.artist),
@@ -24,23 +23,22 @@ public class SpotifyConverter {
                      name: track.name,
                      uri: track.uri)
     }
-    
+
     public static func convertAlbum(_ album: SPTAppRemoteAlbum) -> SpotifyAlbum {
         SpotifyAlbum(name: album.name, uri: album.uri)
     }
-    
+
     public static func convertArtist(_ artist: SPTAppRemoteArtist) -> SpotifyArtist {
         SpotifyArtist(name: artist.name, uri: artist.uri)
     }
-    
-    
+
     public static func convertPlaybackSpeed(_ speed: Float) -> PodcastPlaybackSpeed {
         if speed == 0.5 { return .slow(speed: 0.5) }
         if speed == 1.0 { return .normal(speed: 1.0) }
         if speed == 2.0 { return .fast(speed: 2.0) }
         return .normal(speed: 1.0)
     }
-    
+
     public static func convertRestrictions(_ restrictions: SPTAppRemotePlaybackRestrictions) -> SpotifyPlaybackRestrictions {
         SpotifyPlaybackRestrictions(canSkipNext: restrictions.canSkipNext,
                                     canSkipPrevious: restrictions.canSkipPrevious,
@@ -49,9 +47,8 @@ public class SpotifyConverter {
                                     canToggleShuffle: restrictions.canToggleShuffle,
                                     canSeek: restrictions.canSeek)
     }
-    
+
     public static func convertPlaybackOptions(_ options: SPTAppRemotePlaybackOptions) -> SpotifyPlayBackOptions {
-        
         let repeatMode: SpotifyRepeatMode = {
             switch options.repeatMode {
             case .off:
@@ -64,9 +61,8 @@ public class SpotifyConverter {
                 fatalError("Oooops")
             }
         }()
-        
+
         return SpotifyPlayBackOptions(isShuffling: options.isShuffling,
                                       repeatMode: repeatMode)
     }
-    
 }
