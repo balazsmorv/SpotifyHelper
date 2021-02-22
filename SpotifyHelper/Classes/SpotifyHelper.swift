@@ -34,6 +34,8 @@ public protocol SpotifyHelperProtocol {
 
     func setPodcastSpeed(to: PodcastPlaybackSpeed)
 
+    func openSpotifyApp()
+
     // MARK: - Configuration
 
     /// Set to the size you want the album covers to be downloaded
@@ -211,6 +213,14 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
         appRemote.playerAPI?.setRepeatMode(repeatMode, callback: { result, error in
             self.defaultHandler(result: result, error: error, processName: "Repeat setting")
         })
+    }
+
+    public func openSpotifyApp() {
+        if let url = URL(string: "https://open.spotify.com/") {
+            UIApplication.shared.openURL(url)
+        } else {
+            sendToErrorOutput(title: "Failed to open Spotify", description: "Check if you have the Spotify app on your device. If you do, please report this bug.")
+        }
     }
 
     // MARK: - Lifecycle funcs
