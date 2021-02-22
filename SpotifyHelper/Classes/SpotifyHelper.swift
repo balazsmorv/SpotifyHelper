@@ -47,7 +47,7 @@ public protocol SpotifyHelperProtocol {
     var spotifyItunesID: NSNumber { get }
 }
 
-class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate, SpotifyHelperProtocol {
+public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate, SpotifyHelperProtocol {
     // MARK: - Properties
 
     private let SpotifyClientID: String
