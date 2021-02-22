@@ -44,12 +44,13 @@ public protocol SpotifyHelperProtocol {
     // MARK: - Output
 
     var errorOutput: PublishRelay<SpotifyError> { get }
-    var imagePublisher: PublishSubject<UIImage?> { get }
+    var albumImageObservable: PublishRelay<UIImage?> { get }
     var spotifyStateOutput: SpotifyStateOutput { get }
     var spotifyItunesID: NSNumber { get }
 }
 
 public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate, SpotifyHelperProtocol {
+    
     // MARK: - Properties
 
     private let SpotifyClientID: String
@@ -68,6 +69,8 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
         appRemote.delegate = self
         return appRemote
     }()
+    
+    private let disposeBag = DisposeBag()
 
     /// If empty, it will resume playback of user’s last track or play a random track. If offline, one of the downloaded for offline tracks will play
     private let playURI = ""
@@ -117,17 +120,27 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
                 }),
                 contextURIObservable: playerStateObservable.map({ (remoteStatePlayer) -> URL? in
                     remoteStatePlayer?.contextURI
-                })
-            )
-
+                }))
+        
         super.init()
+        
+        playerStateObservable
+            .compactMap { $0?.track }
+            .flatMapLatest { (track) in
+                self.fetchAlbumArtForTrack(track)
+            }.timeout(.seconds(3), scheduler: MainScheduler.instance)
+            .catchErrorJustReturn(nil)
+            .bind(to: albumImageObservable)
+            .disposed(by: disposeBag)
+
+        
     }
 
     // MARK: - Output
 
     public var errorOutput = PublishRelay<SpotifyError>()
 
-    public var imagePublisher = PublishSubject<UIImage?>()
+    public var albumImageObservable = PublishRelay<UIImage?>()
 
     public var spotifyStateOutput: SpotifyStateOutput
 
