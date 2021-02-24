@@ -66,3 +66,11 @@ public enum SpotifyRepeatMode {
     /// The current context (i.e. playlist, album etc.) over and over again
     case context
 }
+
+
+public enum SpotifyLogLevel {
+    case debug
+    case error
+    case info
+    case none
+}

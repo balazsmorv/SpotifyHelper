@@ -10,6 +10,6 @@ import Foundation
 import SpotifyHelper
 
 public class SpotifyHelperFactory {
-    public static let instance = SpotifyHelper(spotifyClientID: "7bdeb474b09149bd92c907de7d2a052e", redirectURL: URL(string: "spotify-ios-hb-test://callback")!)
+    public static let instance = SpotifyHelper(spotifyClientID: "7bdeb474b09149bd92c907de7d2a052e", redirectURL: URL(string: "spotify-ios-hb-test://callback")!, loglevel: .error)
     private init() {}
 }

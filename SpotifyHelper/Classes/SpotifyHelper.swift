@@ -52,9 +52,9 @@ public protocol SpotifyHelperProtocol {
 public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate, SpotifyHelperProtocol {
     // MARK: - Properties
 
+    
     private let SpotifyClientID: String
     private let SpotifyRedirectURL: URL
-
     private var accessToken: String?
 
     private lazy var configuration = SPTConfiguration(
@@ -63,28 +63,39 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     )
 
     internal lazy var appRemote: SPTAppRemote = {
-        let appRemote = SPTAppRemote(configuration: self.configuration, logLevel: .debug)
+        let appRemote = SPTAppRemote(configuration: self.configuration, logLevel: logLevel)
         appRemote.connectionParameters.accessToken = self.accessToken
         appRemote.delegate = self
         return appRemote
     }()
-
+    
+    
+    private var logLevel: SPTAppRemoteLogLevel
+    
+    
     private let disposeBag = DisposeBag()
 
+    
     /// If empty, it will resume playback of user’s last track or play a random track. If offline, one of the downloaded for offline tracks will play
     private let playURI = ""
 
+    
     /// Observable that emit the spotify player states
     private let playerStateObservable = BehaviorRelay<SPTAppRemotePlayerState?>(value: nil)
 
+    
     public var albumImageSize: CGSize = CGSize(width: 256, height: 256)
 
+    /// The album image size to be downloaded when the network is constrained
     private let smallestAlbumImageSize = CGSize(width: 256, height: 256)
 
+    
     /// The identifier that points to the Spotify app in the App Store. To show the Spotify page, call: SKStoreProductViewController.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: spotifyItunesID])
     public let spotifyItunesID = SPTAppRemote.spotifyItunesItemIdentifier()
 
-    public init(spotifyClientID: String, redirectURL: URL) {
+    
+    
+    public init(spotifyClientID: String, redirectURL: URL, loglevel: SpotifyLogLevel = .none) {
         SpotifyClientID = spotifyClientID
         SpotifyRedirectURL = redirectURL
 
@@ -123,8 +134,23 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
                     remoteStatePlayer?.contextURI
                 }))
 
+        
+        switch loglevel {
+        case .debug:
+            self.logLevel = .debug
+        case .error:
+            self.logLevel = .error
+        case .info:
+            self.logLevel = .info
+        case .none:
+            self.logLevel = .none
+        }
+        
+        
         super.init()
 
+        
+        // Image publisher binding
         playerStateObservable
             .compactMap { $0?.track }
             .flatMapLatest { track in
@@ -139,6 +165,7 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
             }
             .bind(to: albumImageObservable)
             .disposed(by: disposeBag)
+        
     }
 
     // MARK: - Output
@@ -299,12 +326,10 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     }
 
     public func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
-        print("SPOTIFY: disconnected")
         playerStateObservable.accept(nil)
     }
 
     public func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        print("SPOTIFY: failed")
         playerStateObservable.accept(nil)
     }
 

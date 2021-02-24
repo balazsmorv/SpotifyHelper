@@ -154,7 +154,6 @@ public class SpotifyViewController: UIViewController {
         
         // Bind the album covers to the image view. If no album cover exists, put a default image
         spotifyHelper.albumImageObservable.map { (image) -> UIImage in
-            print("Spotify image: \(image)")
             return image ?? self.defaultAlbumCoverImage
         }.bind(to: self.albumImageView.rx.image)
         .disposed(by: disposeBag)
@@ -227,6 +226,7 @@ public class SpotifyViewController: UIViewController {
             self.animateOut {
                 self.parentVC?.dismiss(animated: true, completion: nil)
             }
+            self.spotifyHelper.disconnectRemote()
         }).disposed(by: disposeBag)
 
 
