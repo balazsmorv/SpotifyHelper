@@ -11,7 +11,7 @@
             <string>org.cocoapods.demo.SpotifyHelper-Example</string>
             <key>CFBundleURLSchemes</key>
             <array>
-                <string>spotify-ios-hb</string>
+                <string>spotify-ios-hb-test</string>
             </array>
         </dict>
     </array>

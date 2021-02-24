@@ -21,7 +21,7 @@ public class SpotifyViewController: UIViewController {
     
     private let screenHeight = UIScreen.main.bounds.height
     
-    private let spotifyHelper = SpotifyHelper(spotifyClientID: "50536a78f6e84f84b7f99fe29bb79daa", redirectURL: URL(string: "spotify-ios-hb://callback")!)
+    private let spotifyHelper = SpotifyHelperFactory.instance
     
     private let disposeBag = DisposeBag()
     
