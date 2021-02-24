@@ -50,7 +50,6 @@ public protocol SpotifyHelperProtocol {
 }
 
 public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerStateDelegate, SpotifyHelperProtocol {
-    
     // MARK: - Properties
 
     private let SpotifyClientID: String
@@ -69,7 +68,7 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
         appRemote.delegate = self
         return appRemote
     }()
-    
+
     private let disposeBag = DisposeBag()
 
     /// If empty, it will resume playback of user’s last track or play a random track. If offline, one of the downloaded for offline tracks will play
@@ -79,6 +78,8 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     private let playerStateObservable = BehaviorRelay<SPTAppRemotePlayerState?>(value: nil)
 
     public var albumImageSize: CGSize = CGSize(width: 256, height: 256)
+
+    private let smallestAlbumImageSize = CGSize(width: 256, height: 256)
 
     /// The identifier that points to the Spotify app in the App Store. To show the Spotify page, call: SKStoreProductViewController.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier: spotifyItunesID])
     public let spotifyItunesID = SPTAppRemote.spotifyItunesItemIdentifier()
@@ -121,69 +122,81 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
                 contextURIObservable: playerStateObservable.map({ (remoteStatePlayer) -> URL? in
                     remoteStatePlayer?.contextURI
                 }))
-        
+
         super.init()
-        
+
         playerStateObservable
-            .debug("Spotify image", trimOutput: false)
             .compactMap { $0?.track }
-            .flatMapLatest { (track) in
-                self.fetchAlbumArtForTrack(track)
+            .flatMapLatest { track in
+                self.fetchAlbumArtForTrack(track, imageSize: self.albumImageSize)
+                    .timeout(.seconds(3), scheduler: MainScheduler.instance) // If the image doesnt arrive within 3s, timeout
+                    .catchError { _ in
+                        print("Spotify image low res")
+                        return self.fetchAlbumArtForTrack(track, imageSize: self.smallestAlbumImageSize)
+                            .timeout(.seconds(3), scheduler: MainScheduler.instance)
+                    }
+                    .catchErrorJustReturn(nil)
             }
-            .catchErrorJustReturn(nil)
             .bind(to: albumImageObservable)
             .disposed(by: disposeBag)
-
-        
     }
 
     // MARK: - Output
 
     public var errorOutput = PublishRelay<SpotifyError>()
 
+    /// Subscribe to this relay to get album images. Once the current track changes, its album cover starts downloading. If an error occurs, or the loading takes more than 3 seconds, a lower resolution image starts downloading. If that fails as well, or takes more than 3 secs, a nil value is passed to the downstream.
     public var albumImageObservable = PublishRelay<UIImage?>()
 
+    /// Mirrors the state of the Spotify player.
     public var spotifyStateOutput: SpotifyStateOutput
 
     // MARK: - Input - user interaction
 
     public func seekForward15seconds() {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.seekForward15Seconds({ result, error in
             self.defaultHandler(result: result, error: error, processName: "Seek forward")
         })
     }
 
     public func seekBackwards15seconds() {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.seekBackward15Seconds({ result, error in
             self.defaultHandler(result: result, error: error, processName: "Seek backward")
         })
     }
 
     public func skipToNextTrack() {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.skip(toNext: { result, error in
             self.defaultHandler(result: result, error: error, processName: "Skip to next track")
         })
     }
 
     public func skipToPreviousTrack() {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.skip(toPrevious: { result, error in
             self.defaultHandler(result: result, error: error, processName: "Skip to previous track")
         })
     }
 
     public func resumePlay() {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.resume({ result, error in
             self.defaultHandler(result: result, error: error, processName: "Resuming")
         })
     }
 
     public func pausePlay() {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.pause({ result, error in
             self.defaultHandler(result: result, error: error, processName: "Pausing")
         })
     }
 
     public func toggleShuffle() {
+        if !appRemote.isConnected { connectRemote() }
         guard let currentState = playerStateObservable.value?.playbackOptions.isShuffling else { return }
         appRemote.playerAPI?.setShuffle(!currentState, callback: { result, error in
             self.defaultHandler(result: result, error: error, processName: "Shuffle setting")
@@ -191,6 +204,7 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     }
 
     public func setPodcastSpeed(to speed: PodcastPlaybackSpeed) {
+        if !appRemote.isConnected { connectRemote() }
         switch speed {
         case let .fast(speed):
             appRemote.playerAPI?.setPodcastPlaybackSpeed(speed as! SPTAppRemotePodcastPlaybackSpeed, callback: { result, error in
@@ -208,12 +222,14 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     }
 
     public func playTrackWithIdentifier(_ identifier: String) {
+        if !appRemote.isConnected { connectRemote() }
         appRemote.playerAPI?.play(identifier, callback: { result, error in
             self.defaultHandler(result: result, error: error, processName: "Playing \(identifier)")
         })
     }
 
     public func toggleRepeatMode() {
+        if !appRemote.isConnected { connectRemote() }
         guard let playerState = playerStateObservable.value else { return }
         let repeatMode: SPTAppRemotePlaybackOptionsRepeatMode = {
             switch playerState.playbackOptions.repeatMode {
@@ -231,7 +247,7 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
 
     public func openSpotifyApp() {
         if let url = URL(string: "https://open.spotify.com/") {
-            UIApplication.shared.openURL(url)
+            UIApplication.shared.open(url, options: [:], completionHandler: nil)
         } else {
             sendToErrorOutput(title: "Failed to open Spotify", description: "Check if you have the Spotify app on your device. If you do, please report this bug.")
         }
@@ -259,9 +275,9 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     }
 
     public func connectRemote() {
-        SPTAppRemote.checkIfSpotifyAppIsActive { (active) in
+        SPTAppRemote.checkIfSpotifyAppIsActive { active in
             // if it is active, connect to it
-            if active {
+            if active && self.accessToken != nil {
                 self.appRemote.connect()
             } else {
                 // Initiate the authorization. In receiveDeepLink(), the connection will be made
@@ -310,12 +326,12 @@ public class SpotifyHelper: NSObject, SPTAppRemoteDelegate, SPTAppRemotePlayerSt
     }
 
     /// Downloads the album picture for the given track
-    private func fetchAlbumArtForTrack(_ track: SPTAppRemoteTrack) -> Single<UIImage?> {
+    private func fetchAlbumArtForTrack(_ track: SPTAppRemoteTrack, imageSize: CGSize) -> Single<UIImage?> {
         return Single.create { [weak self] (single) -> Disposable in
             let disposable = Disposables.create()
             guard let strongSelf = self else { return disposable }
 
-            strongSelf.appRemote.imageAPI?.fetchImage(forItem: track, with: strongSelf.albumImageSize, callback: { image, error in
+            strongSelf.appRemote.imageAPI?.fetchImage(forItem: track, with: imageSize, callback: { image, error in
                 if let error = error {
                     single(.error(error))
                 }

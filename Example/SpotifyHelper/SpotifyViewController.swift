@@ -154,13 +154,14 @@ public class SpotifyViewController: UIViewController {
         
         // Bind the album covers to the image view. If no album cover exists, put a default image
         spotifyHelper.albumImageObservable.map { (image) -> UIImage in
+            print("Spotify image: \(image)")
             return image ?? self.defaultAlbumCoverImage
         }.bind(to: self.albumImageView.rx.image)
         .disposed(by: disposeBag)
         
         
         spotifyHelper.spotifyStateOutput.isPausedObservable.map { (optionaBool) -> Bool in
-            optionaBool ?? true
+            return optionaBool ?? true
         }.subscribe(onNext: { (paused) in
             if paused {
                 self.playPauseButton.setImage(self.playingImage, for: .normal)

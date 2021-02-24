@@ -1,5 +1,4 @@
 import XCTest
-import SpotifyHelper
 
 class Tests: XCTestCase {
     
