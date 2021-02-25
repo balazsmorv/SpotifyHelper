@@ -68,7 +68,7 @@ public class SpotifyViewController: UIViewController {
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        spotifyHelper.connectRemote()
         animateIn()
     }
 
@@ -85,10 +85,12 @@ public class SpotifyViewController: UIViewController {
         self.playPauseButton.tintColor = self.buttonTintColor
         self.nextTrackButton.tintColor = self.buttonTintColor
         
-        spotifyHelper.connectRemote()
-        
         setSubscriptions()
         setActions()
+    }
+    
+    public override func viewDidDisappear(_ animated: Bool) {
+        self.spotifyHelper.disconnectRemote()
     }
     
     
@@ -205,7 +207,12 @@ public class SpotifyViewController: UIViewController {
     private func setActions() {
         
         self.playPauseButton.rx.tap.subscribe(onNext: { (_) in
-            self.isPlaying ? self.spotifyHelper.pausePlay() : self.spotifyHelper.resumePlay()
+            if self.isPlaying {
+                self.spotifyHelper.pausePlay()
+                self.parentVC?.dismiss(animated: false, completion: nil)
+            } else {
+                self.spotifyHelper.resumePlay()
+            }
         }).disposed(by: disposeBag)
         
         self.previousTrackButton.rx.tap.subscribe(onNext: { (_) in
@@ -226,7 +233,6 @@ public class SpotifyViewController: UIViewController {
             self.animateOut {
                 self.parentVC?.dismiss(animated: true, completion: nil)
             }
-            self.spotifyHelper.disconnectRemote()
         }).disposed(by: disposeBag)
 
 
